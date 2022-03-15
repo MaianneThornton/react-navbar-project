@@ -1,10 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { FaBars, FaTwitter } from 'react-icons/fa'
+import { FaBars } from 'react-icons/fa'
 import { links, social } from './data'
 import logo from './logo.svg'
 
 const Navbar = () => {
   const [showLinks,  setShowLinks] = useState (false);
+  const linksContainerRef = useRef(null);
+  const linksRef = useRef(null);
+
+  // callback function to check the height for the links, then manually update the linksContainer height
+  useEffect(() => {
+    // getBoundingClientRect function returns the dimensions of the container
+    // console.log(linksRef.current.getBoundingClientRect());
+    const linksHeight = linksRef.current.getBoundingClientRect().height;
+    if (showLinks){
+      linksContainerRef. current.style.height = `${linksHeight}px`
+    }else {
+      linksContainerRef.current.style.height = '0px'
+    }
+  }, [showLinks])
+
   return <nav>
     <div className="nav-center">
       <div className="nav-header">
@@ -15,10 +30,8 @@ const Navbar = () => {
         </button>
       </div>
       {/* If showLinks is true, return links-container and showContainer class else show links-container */} 
-      <div className={`${
-        showLinks ? 'links-container show-container' : 'links-container' } `}
-      >
-        <ul className="links">
+      <div className="links-container"ref={linksContainerRef}>
+        <ul className="links" ref={linksRef}>
           {/* Iterates through the link array in the data.js file */}
           {links.map((link) => {
             // destructuring the link array
